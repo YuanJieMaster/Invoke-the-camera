@@ -1,7 +1,6 @@
-#学习笔记
-###0 在vscode里写markdown
+###零、在vscode里写markdown
 :smile::smile::smile::smile::smile:  
-####（1）安装markdown  
+####1、安装markdown  
 markdown可在vscode中作为插件安装使用  
 先下载vscode，然后在插件商店安装即可  
 在文件夹中新建.md格式文件  
@@ -11,7 +10,7 @@ Ctrl+，（逗号）=打开setting，进入设置界面
 搜索break，取消勾选Break on single new line，避免不必要的空格  
 完成编辑md文件后，右键点击预览（preview），查看效果  
 顺带一提，ctrl+b在vscode中打开或关闭左边文件栏  
-####（2）常规markdown使用  
+####2、常规markdown使用  
 标题###   行末两个空格换行  
 emoji:xxx::blush::smirk::kissing::heart_eyes:  
 嵌入代码
@@ -21,15 +20,15 @@ emoji:xxx::blush::smirk::kissing::heart_eyes:
 
 
 
-###1 使用虚拟机安装Ubuntu系统
-####（1）选择虚拟机安装Ubuntu系统  
+###一、使用虚拟机安装Ubuntu系统
+####1、选择虚拟机安装Ubuntu系统  
 安装Vmware虚拟机最好划分一片专门的磁盘区域  
 在镜像网站下载ubuntu系统文件  
 在虚拟机内安装ubuntu  
 :x:安装ubuntu时有警告说会删除磁盘内所有文件，我觉得应该早分一个磁盘区域  
 但是后来发现它所说的删除磁盘文件指的是虚拟机的而不是主机的  
 直接安装:laughing:  :o:
-####（2）换源,换输入法  
+####2、换源,换输入法  
 安装完成后需要换服务源，默认的不能用  
 在软件更新器中安装选择最佳服务源  
 ctrl+alt+T打开命令行输入指令 sudo apt upgrade更新软件  
@@ -52,13 +51,13 @@ sudo apt install ibus-sunpinyin
 
 
 
-###2 打印“Hello，World”
-####（1）下载vscode，配置C++环境  
+###二、打印“Hello，World”
+####1、下载vscode，配置C++环境  
 安装vscode，没什么好说的  
 输入指令sudo apt-get install vim安装vim  
 sudo apt install g++安装g++  
 安装汉化、C\C++插件  
-####（2）写自定义的hello_world头文件  
+####2、写自定义的hello_world头文件  
 :x:但是因为一开始误选了gcc运行时出错了  
 在右上角点击齿轮图案重新选择调试配置  
 选择g++生成和调试文件:o:  
@@ -84,8 +83,8 @@ void printfhello(){
 
 
 
-###3 编写代码调用摄像头
-####（1）安装OpenCV  
+###三、编写代码调用摄像头
+####1、安装OpenCV  
 #####使用包管理器安装OpenCV
 安装编译工具
 ```
@@ -258,7 +257,7 @@ make
 成功调取摄像头:o::laughing:  
 
 
-####（2）编写调用摄像头代码
+####2、编写调用摄像头代码
 一开始的代码  
 ```cpp
 #include <opencv2/opencv.hpp>
@@ -341,7 +340,53 @@ g++ -fdiagnostics-color=always -g /home/laoyoutiao/Codes/camera/main.cpp -o /hom
 
 
 
-###4 将代码上传到github上  
-####（1）新建github仓库  
+###四、将代码上传到github上  
+####1、新建github仓库  
 没什么可说的
-####（2）将本地代码推送到github上  
+####2、将本地代码推送到github上  
+新建文件夹，输入命令  
+```
+git init
+```
+把这个文件夹变成Git可管理的仓库
+输入命令  
+```
+git add .
+```
+把这个文件夹下的目录的全部文件文件添加到缓存区  
+查看现在的提交状态  
+```
+git status
+```
+把文件提交到本地仓库  
+```
+git commit -m "这里面写你的注释"  
+```
+连接本地Git仓库和Github仓库
+格式
+```
+$ git remote add origin git@github.com:用户名/仓库名.git
+```
+```
+$ git remote add origin git@github.com:YuanJieMaster/Invoke-the-camera.git
+```
+推送代码
+```
+git push origin main
+```
+github仓库的默认分支名是main，而较老版本的git在本地仓库默认的分支名是master，所以之前会出现上传后github上多了一个master的分支，如果想改成一致，可以使用如下命令：  
+```
+git branch -m master main
+```
+使用这个命令时需保证远程github仓库时没有本地提交的分支，如果提交main，而github上又设置选了README就会失败，:x:报错：  
+```
+error: failed to push some refs to 'github.com:YuanJieMaster/Invoke-the-camera.git'
+```
+此时可以使用以下命令将远程仓库中的更改合并到你的本地仓库中
+```
+git pull origin main
+```
+之后再使用push命令:o:  
+
+
+
