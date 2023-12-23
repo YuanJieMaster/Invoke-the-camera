@@ -337,8 +337,7 @@ g++ -fdiagnostics-color=always -g /home/laoyoutiao/Codes/camera/main.cpp -o /hom
 ./main
 ```
 成功！！！！！！！！！！:o::grin::grin::grin:  
-![Alt text](%E5%9B%BE%E7%89%871.png)
-
+![Alt text](image.png)
 
 ###四、将代码上传到github上  
 ####1、新建github仓库  
