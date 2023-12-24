@@ -17,7 +17,8 @@ emoji:xxx::blush::smirk::kissing::heart_eyes:
 ```c
  #include<stdio.h>
  ```  
-
+插入图片，是需要简单的复制粘贴就好，markdown会自动在同一个文件夹下备份存入的图片  
+如果忘记保存，在左侧文件栏底下的时间线里可以找回数据  
 
 
 ###一、使用虚拟机安装Ubuntu系统
@@ -337,7 +338,8 @@ g++ -fdiagnostics-color=always -g /home/laoyoutiao/Codes/camera/main.cpp -o /hom
 ./main
 ```
 成功！！！！！！！！！！:o::grin::grin::grin:  
-![Alt text](image.png)
+
+
 
 ###四、将代码上传到github上  
 ####1、新建github仓库  
@@ -389,3 +391,42 @@ git pull origin main
 
 
 
+###五、安装anaconda，配置pytorch环境
+
+####1、安装anaconda
+在镜像网站下载anaconda  
+在Anaconda中，使用conda命令创建名为"myenv"虚拟环境
+```
+conda create --name myenv
+```
+激活虚拟环境：
+```
+conda activate myenv
+```
+在虚拟环境中安装第三方库：
+```
+conda install package_name
+```
+退出虚拟环境：
+```
+conda deactivate
+```
+
+
+####2、配置PyTorch环境
+安装PyTorch库、TorchVision和TorchAudio库
+```
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+```
+验证PyTorch是否安装成功：在Python中输入
+```
+import torch
+```
+如果没有报错，则安装成功。
+测试PyTorch： 安装完成后，您可以使用以下代码测试PyTorch是否正常工作：
+```
+import torch
+x = torch.rand(5, 3)
+print(x)
+```
+如果您看到一个5x3的随机矩阵，则说明PyTorch已经成功安装并配置好。
