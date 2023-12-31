@@ -49,6 +49,7 @@ sudo apt install ibus-sunpinyin
 在设置里键盘找到输入源添加  
 实现可以在命令行中打中文，但是在浏览器里打不出来:dizzy_face:  
 重启一下虚拟机就可以了(遇事不决重启一下):sweat::o:  
+![Alt text](image.png)
 
 
 
@@ -81,6 +82,7 @@ void printfhello(){
 }
 #endif
 ```
+![Alt text](image-1.png)
 
 
 
@@ -133,7 +135,9 @@ make -j8
 ```
 sudo make install
 ```
+![Alt text](image-2.png)
 :x:安装过程中出错了,报错设备上空间不够，但是我明明划了100GB的磁盘空间  
+![Alt text](image-3.png)
 打开磁盘资源管理器，看一下是根文件夹不足，为什么主文件夹只有2.7GB  
 下载安装gparted来进行磁盘管理  
 ```
@@ -165,6 +169,8 @@ sudo mount -o remount,rw /dev/sda3
 ```
 然后通过gparted扩大主文件夹  
 成功了成功了成功了！:o::laughing::laughing::laughing:  
+![Alt text](image-4.png)
+![Alt text](image-5.png)
 环境配置  
 打开/etc/ld.so.conf  
 ```
@@ -338,18 +344,30 @@ g++ -fdiagnostics-color=always -g /home/laoyoutiao/Codes/camera/main.cpp -o /hom
 ./main
 ```
 成功！！！！！！！！！！:o::grin::grin::grin:  
+![Alt text](image-6.png)
 
 
 
 ###四、将代码上传到github上  
 ####1、新建github仓库  
 没什么可说的
-####2、将本地代码推送到github上  
+####2、连接本地Git仓库和Github仓库
+生成密钥
+先创建SSH KEY，先看一下你C盘用户目录下有没有.ssh目录，有的话看下里面有没有id_rsa和id_rsa.pub这两个文件，有就跳到下一步，没有就通过下面命令创建
+```
+$ ssh-keygen -t rsa -C "youremail@example.com"
+```
+一直点击Enter进行确认，生成成功后，查看密钥文件，密钥保存在根目录下的 .ssh 文件夹下（默认是隐藏的），可使用Ctrl + H 查看到 ./ssh文件夹，或者直接 cd ./ssh，注意是查看 .pub文件，点击 id_rsa.pub文件，Ctrl + A,Ctrl + C，将文件里的内容全部复制到 github 上的ssh处，进入GitHub后，点击头像的展开的settings
 新建文件夹，输入命令  
 ```
 git init
 ```
-把这个文件夹变成Git可管理的仓库
+建好仓库后，需要将仓库克隆到本地，点击仓库的code，复制HTTPS下方的URL:
+```
+git clone 仓库地址
+```
+
+####3、将本地代码推送到github上  
 输入命令  
 ```
 git add .
@@ -363,7 +381,8 @@ git status
 ```
 git commit -m "这里面写你的注释"  
 ```
-连接本地Git仓库和Github仓库
+
+由于本地Git仓库和Github仓库之间的传输是通过SSH加密的，所以连接时需要设置一下：  
 格式
 ```
 $ git remote add origin git@github.com:用户名/仓库名.git
@@ -395,6 +414,10 @@ git pull origin main
 
 ####1、安装anaconda
 在镜像网站下载anaconda  
+运行 Anaconda 安装脚本:
+```
+bash Anaconda3-2023.09-0-Linux-x86_64.sh
+```
 在Anaconda中，使用conda命令创建名为"myenv"虚拟环境
 ```
 conda create --name myenv
@@ -414,19 +437,347 @@ conda deactivate
 
 
 ####2、配置PyTorch环境
+使用conda命令安装PyTorch。如果电脑有独立显卡，可以安装PyTorch的GPU版本。如果没有独立显卡，可以安装CPU版本或者使用云服务器。  
 安装PyTorch库、TorchVision和TorchAudio库
+安装PyTorch GPU版本：
+```
+conda install pytorch torchvision torchaudio cudatoolkit=xx.x -c pytorch
+```
+cudatoolkit=xx.x,这是指定PyTorch安装的CUDA工具包的版本，其中xx.x应该替换为系统上安装的CUDA版本。
+安装PyTorch CPU版本,即不使用GPU加速：
 ```
 conda install pytorch torchvision torchaudio cpuonly -c pytorch
 ```
-验证PyTorch是否安装成功：在Python中输入
+![Alt text](image-7.png)
+确保PyTorch已成功安装在您的环境中:
+```
+conda list
+```
+要创建一个新的名为“myenv”的conda环境，可以使用以下命令：
+```
+conda create --name myenv
+```
+可以使用以下命令列出已有的conda环境：
+```
+conda env list
+```
+然后激活您想要使用的环境：
+```
+conda activate myenv
+```
+接下来验证PyTorch是否安装成功  
+打开python：
+```
+python
+```
+在Python中输入：  
 ```
 import torch
 ```
 如果没有报错，则安装成功。
-测试PyTorch： 安装完成后，您可以使用以下代码测试PyTorch是否正常工作：
+测试PyTorch： 安装完成后，可以使用以下代码测试PyTorch是否正常工作：
 ```
 import torch
 x = torch.rand(5, 3)
 print(x)
 ```
-如果您看到一个5x3的随机矩阵，则说明PyTorch已经成功安装并配置好。
+如果您看到一个5x3的随机矩阵，则说明PyTorch已经成功安装并配置好。  
+![Alt text](image-8.png)
+
+另外可以选择使用免费的云服务器服务，比如Google Colab，来学习和使用PyTorch  
+
+
+
+###六、搭建SITL仿真环境，启动窗口
+####1、搭建Ardupilot开发环境
+安装git：
+```
+sudo apt-get update
+
+sudo apt-get install git
+
+sudo apt-get install gitk git-gui
+```
+然后输入以下命令：
+```
+git clone https://github.com/ArduPilot/ardupilot
+cd ardupilot
+git submodule update --init --recursive
+```
+接着运行对应的sh执行脚本开始安装所需的各种依赖包:
+```
+./Tools/environment_install/install-prereqs-ubuntu.sh -y
+```
+之后就需要配置路径
+```
+. ~/.profile
+```
+:x:大体上都很顺利，有一处小报错，不知道有什么隐患：
+```
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+conda-repo-cli 1.0.75 requires requests_mock, which is not installed.
+conda-repo-cli 1.0.75 requires clyent==1.2.1, but you have clyent 1.2.2 which is incompatible.
+```
+后面又有一大串报错:dizzy_face:  
+![Alt text](image-9.png)
+应该是网络的问题，速度太慢了，尝试增加超时时间,
+可以使用 timeout 命令来设置超时。首先，请确保安装 coreutils 包，该包包含了 timeout 命令：
+```
+sudo apt-get install coreutils
+```
+然后，可以使用以下命令来运行 . ~/.profile 并设置超时时间：
+```
+sudo timeout 3600s bash -c '. ~/.profile'
+```
+这个增加超时时间是真好用，万能药  
+成功！！:laughing:
+![Alt text](image-10.png)
+编译支持pixhawk1飞控板的多旋翼飞控的流程：
+配置项目
+```
+cd ardupilot
+./waf configure --board Pixhawk1
+```
+编译 Copter 固件
+```
+./waf copter
+```
+![Alt text](image-11.png)
+:x:大量报错:dizzy_face:
+![Alt text](image-12.png)
+可能是由于缺少相关文件或出现了其他编译错误导致的  
+尝试清除构建目录并重新编译。您可以尝试执行以下命令来清除构建目录：
+```
+rm -rf build/Pixhawk1
+```
+然后重新执行编译命令：
+```
+./waf copter --board Pixhawk1
+```
+:x:报错：
+```
+Missing configuration file '/home/laoyoutiao/ardupilot/build/Pixhawk1/ap_config.h', reconfigure the project!
+```
+这个错误提示表明缺少配置文件 ap_config.h，需要重新配置项目以生成该文件。
+```
+./waf configure --board Pixhawk1
+./waf copter
+```
+重新编译后又回到原来那个错误：
+![Alt text](image-13.png)
+在编译过程中出现了一个名为 "ChibiOS_lib" 的任务失败。根据错误信息，这个任务的退出状态是 2。
+确保 "ChibiOS_lib" 相关的文件存在且位于正确的位置。检查这些文件是否完整且没有损坏。
+尝试换一个板卡并重新编译，看看问题是否解决
+```
+./waf  configure --board sitl
+./waf copter
+```
+![Alt text](image-14.png)
+:o:成功！！！:smirk:
+####2、ArduPilot 软件在环仿真SITL（SITL+MAVProxy）  
+首先要进入需要仿真的多旋翼无人机的目录下：  
+```
+cd ardupilot/ArduCopter  
+```
+如果是第一次运行仿真，需要运行以下命令进行初始化：
+```
+sim_vehicle.py -w
+```
+或则是模拟器参数被改的乱七八糟的时候，也可用这个命令恢复初始参数。
+启动完毕，使用 Ctrl+C 终止正在运行的sim_vehicle.py -w
+接下来就可以启动模拟器了：
+```
+sim_vehicle.py --console --map
+```
+运行后只看到一个窗口  
+![Alt text](image-15.png)
+可能是由于MAVProxy，pymavlink，future，lxml这几个python包没有安装好  
+使用以下命令来安装 pip2：
+```
+sudo apt-get install python-pip
+```
+使用以下命令来安装所需的 Python 包：
+```
+sudo -H pip2 install --upgrade MAVProxy pymavlink future lxml
+```
+报错，python版本没有更新  
+更新python：
+```
+sudo apt-get update
+sudo apt-get install python3
+```
+可以在终端中运行以下命令来检查这些Python包是否已经安装好：
+```
+MAVProxy: pip show MAVProxy
+pymavlink: pip show pymavlink
+future: pip show future
+lxml: pip show lxml
+```
+还是不行，只能打开一个窗口    
+![Alt text](image-16.png)
+其中有两个关键的报错：
+```
+Failed to load module: No module named 'console'. Use 'set moddebug 3' in the MAVProxy console to enable traceback  
+Failed to load module: No module named 'map'. Use 'set moddebug 3' in the MAVProxy console to enable traceback
+```
+这两个报错就对应了两个未打开的窗口  
+错误消息显示 MAVProxy 无法加载 'console' 和 'map' 模块。并提示可以尝试在 MAVProxy 控制台中输入 'set moddebug 3' 来启用 traceback
+启动 MAVProxy 并进入控制台：
+```
+mavproxy.py --console
+```
+然后输入
+```
+set moddebug 4
+module load map
+```
+提示要安装cv2库
+![Alt text](image-17.png)
+输入
+```
+set moddebug 4
+module load 
+```
+提示要安装wx库
+![Alt text](image-18.png)
+ 
+还要安装matplotmap  
+安装cv2库
+```
+pip install opencv-python
+```
+安装wx库
+```
+pip install -U wxPython
+```
+安装matplotmap库
+```
+pip install matplotlib
+```
+下载速度太慢还超时的话，试试用清华的镜像网站
+```
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+```
+这将会将 pip 的默认源更改为清华大学的镜像源  
+:x:还是出现问题  
+```
+Building wheels for collected packages: wxPython
+Building wheel for wxPython (setup.py) ... |
+```
+一直卡在这里动不了  
+在中断安装后，您可以尝试清理 pip 的缓存，然后重新安装。在终端中执行以下命令：
+```
+pip cache purge
+```
+安装成功，再试一下  
+```
+sim_vehicle.py --console --map
+```
+![Alt text](image-19.png)
+还有问题，只有一个窗口  
+其中有两处报错：
+```
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+```
+```
+ERROR in command ['load', 'map']: map not ready
+```
+关于 xkbcommon 库的报错，尝试重新安装 xkbcommon：
+```
+conda remove xkbcommon
+conda install -c conda-forge xkbcommon
+```
+安装这一步卡住了，卡在中间  
+![Alt text](image-22.png)  
+:x:报错  
+```
+PackagesNotFoundError: The following packages are not available from current channels:
+
+xkbcommon
+```
+尝试使用 pip 安装 xkbcommon 包:
+```
+pip install xkbcommon
+```
+安装成功，但是再试一遍还是那个报错，沿着提示的路径去找是没找到xkb文件的  
+
+
+再试一次，又有一个报错：
+```
+Fatal Python error: _enter_buffered_busy: could not acquire lock for <_io.BufferedWriter name='<stderr>'> at interpreter shutdown, possibly due to daemon threads
+Python runtime state: finalizing (tstate=0x00000000008a1a98)
+
+Current thread 0x00007fb762d55440 (most recent call first):
+  <no Python frame>
+
+Extension modules: mkl._mklinit, mkl._py_mkl_service, numpy.core._multiarray_umath, numpy.core._multiarray_tests, numpy.linalg._umath_linalg, numpy.fft._pocketfft_internal, numpy.random._common, numpy.random.bit_generator, numpy.random._bounded_integers, numpy.random._mt19937, numpy.random.mtrand, numpy.random._philox, numpy.random._pcg64, numpy.random._sfc64, numpy.random._generator, wx._core, matplotlib._c_internal_utils, PIL._imaging, matplotlib._path, kiwisolver._cext (total: 20)
+```
+可能是由某些扩展模块的问题引起的，也可能是由于模块之间的冲突或者与系统库的不兼容性导致的
+尝试更新 Python 和相关的模块都是最新版本。可以使用以下命令：
+```
+pip install --upgrade mkl numpy wxPython matplotlib pillow
+```
+![Alt text](image-20.png)
+![Alt text](image-21.png)
+此处又有报错：
+```
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+geocoder 1.38.1 requires click, which is not installed.
+geocoder 1.38.1 requires future, which is not installed.
+```
+这个错误表明环境中存在依赖冲突，导致 pip 的依赖解析器无法正确解决安装问题  
+根据错误信息，环境中缺少了 click 和 future 这两个依赖。使用以下命令安装它们：  
+```
+pip install click future
+```
+有时 pip 的缓存可能导致依赖解析错误。尝试清理 pip 缓存并再次运行安装命令：  
+```
+pip cache purge
+pip install geocoder
+```
+确保 pip 是最新版本。可以使用以下命令升级 pip：
+```
+pip install --upgrade pip
+```
+最后还是回到那两个错误：anaconda没有X11
+```
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+xkbcommon: ERROR: failed to add default include path /home/laoyoutiao/anaconda3/share/X11/xkb
+```
+```
+ERROR in command ['load', 'map']: map not ready
+```
+尝试通过系统的包管理器安装X11：
+```
+sudo apt-get install libx11-dev
+```
+尝试安装以下库：
+```
+sudo apt-get install libxkbcommon-dev libxkbcommon-x11-dev
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+正常启动后，就会看到三个窗口：Terminal, Console, Map，这样最基本的软件在环仿真程序就运行起来了。
+
